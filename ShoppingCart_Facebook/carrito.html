@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Lab de Web - Facebook - Shopping Cart</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link href="css/shop-item.css" rel="stylesheet">
+
+	<link rel="stylesheet" type="css/style.css">
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+
+<body onload="initialize()">
+
+	<!-- Navigation -->
+	<nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: rgb(216, 58, 79);">
+		<div class="container" style="font-family: 'Poppins', sans-serif; font-size: 20px">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active">
+						<a class="navbar-brand" href="index.html">
+							<img src="img/home.png" width="30" height="30" alt="Home">
+						</a>
+					</li>
+					<li class="nav-item" id="fb">
+						<a class="navbar-brand" href="#">
+							<img src="img/fb.png" width="30" height="30" onclick="logIn()" alt="Facebook Login">
+						</a>
+					</li>
+					<li class="nav-item" id="carrito">
+						<a class="navbar-brand" href="carrito.html">
+							<img src="img/cart.png" width="30" height="30" alt="Shopping Cart">
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!--Carrito-->
+	<br>
+	<br>
+	<div class="container" style="font-family: 'Roboto', sans-serif; font-size: 20px">
+		<h5>Simple Shopping Car</h5>
+		<br>
+		<label>Productos</label>
+		<select  id="id_productos"  onchange="getDataProductos()">
+
+		</select>
+
+
+		<label for="Precio">Precio</label>
+
+		<input placeholder="0.00" id="Precio" type="text">
+
+		<!--Descuento-->
+		<label for="Descuento">Descuento</label>
+		<select id="Descuento">
+			<option value="0">0</option>
+			<option value=".50">50%</option>
+			<option value=".30">30%</option>
+			<option value=".10">10%</option>
+		</select>
+
+		<label for="Precio">Cantidad</label>
+
+		<input type="text" size="1" id="Cantidad" value="1"
+		onkeydown="if (event.keyCode == 13) document.getElementById('addShoppingCar').click()"/>
+
+
+
+		<input type="button"  id="addShoppingCar" onclick="addCar()"  value=" + "/>      
+		<br>
+
+		<table id="tableProducts" border="1" class = "table" >
+			<br>
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col" width="35" id="Cant">Cantidad</th>
+					<th scope="col" width="35" id="Nombre">Nombre</th>
+					<th scope="col" width="35" id="Prec">Precio</th>
+					<th scope="col" width="35" id="Desc">Descuento</th>
+					<th scope="col" width="35" id="Imp">Importe</th>
+					<th scope="col" width="35" id="Img">Imagen</th>
+					<th scope="col" width="40" id="borrar">Borrar</th>
+				</tr>
+			</thead>
+		</table>
+
+
+		<table border="0">
+			<tr>
+
+				<td>Total Importe: $</td>
+				<td> <div id="totalImporte" /></td>
+
+				<td>Tot Uni:</td>
+				<td> <div id="totalUnidades" /></td>
+			</tr>    
+		</table>
+
+
+
+	</div>
+
+
+</div>
+
+<!--Paypal-->
+<div class="container text-center">
+	<div id="paypal-button-container"></div>
+	<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+</div>
+<script>
+// Render the PayPal button
+paypal.Button.render({
+// Set your environment
+env: 'sandbox', // sandbox | production
+
+// Specify the style of the button
+style: {
+  layout: 'vertical',  // horizontal | vertical
+  size:   'medium',    // medium | large | responsive
+  shape:  'rect',      // pill | rect
+  color:  'gold'       // gold | blue | silver | white | black
+},
+
+// Specify allowed and disallowed funding sources
+//
+// Options:
+// - paypal.FUNDING.CARD
+// - paypal.FUNDING.CREDIT
+// - paypal.FUNDING.ELV
+funding: {
+	allowed: [
+	paypal.FUNDING.CARD,
+	paypal.FUNDING.CREDIT
+	],
+	disallowed: []
+},
+
+// PayPal Client IDs - replace with your own
+// Create a PayPal app: https://developer.paypal.com/developer/applications/create
+client: {
+	sandbox: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+	production: '<insert production client id>'
+},
+
+payment: function (data, actions) {
+	return actions.payment.create({
+		payment: {
+			transactions: [
+			{
+				amount: {
+					total: '0.01',
+					currency: 'USD'
+				}
+			}
+			]
+		}
+	});
+},
+
+onAuthorize: function (data, actions) {
+	return actions.payment.execute()
+	.then(function () {
+		window.alert('Payment Complete!');
+	});
+}
+}, '#paypal-button-container');
+</script>
+<!--Termina Paypal>
+
+	<!-- Bootstrap core JavaScript -->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!--SDK FB-->
+	<script>
+		function logIn(){
+			FB.login(function (response){
+				console.log(response);
+			})
+		}
+
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '154898708798471',
+      cookie     : true,  // enable cookies to allow the server to access 
+                          // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.8' // use graph api version 2.8
+  });
+
+    // Now that we've initialized the JavaScript SDK, we call 
+    // FB.getLoginStatus().  This function gets the state of the
+    // person visiting this page and can return one of three states to
+    // the callback you provide.  They can be:
+    //
+    // 1. Logged into your app ('connected')
+    // 2. Logged into Facebook, but not your app ('not_authorized')
+    // 3. Not logged into Facebook and can't tell if they are logged into
+    //    your app or not.
+    //
+    // These three cases are handled in the callback function.
+
+    FB.getLoginStatus(function(response) {
+    	statusChangeCallback(response);
+    });
+
+};
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+  	var js, fjs = d.getElementsByTagName(s)[0];
+  	if (d.getElementById(id)) return;
+  	js = d.createElement(s); js.id = id;
+  	js.src = "https://connect.facebook.net/en_US/sdk.js";
+  	fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+  	console.log('Welcome!  Fetching your information.... ');
+  	FB.api('/me', function(response) {
+  		console.log('Successful login for: ' + response.name);
+  		document.getElementById('status').innerHTML =
+  		'Thanks for logging in, ' + response.name + '!';
+  	});
+  }
+</script>
+
+</body>
+
+</html>
+
+<!--Carrito tabla -->
+<script>
+
+	var myDataProductos;
+
+	function getDataProductos(){
+		var my_producto = $("#id_productos").val();
+		myDataProductos.forEach(function (tweet) 
+		{
+			if (tweet.id == my_producto)
+			{
+				$('#Precio').val(tweet.price);
+				$('#Descuento').val(tweet.desc);
+				$('#ProductImg').val(tweet.img);
+			}
+		});
+	}
+	var imgs = ["img/switch.jpg", "img/motorola.jpg", "img/television.jpg"];
+
+	function getProducts(){
+
+		var listProducts = []
+
+		var myProduct0 = new ShoppingCarProduct();
+		myProduct0.id = "000";
+		myProduct0.name = "Producto";
+		myProduct0.price = "0000";
+		myProduct0.img ="";
+		myProduct0.desc = ".00"
+
+		var myProduct1 = new ShoppingCarProduct();
+		myProduct1.id = "001";
+		myProduct1.name = "Switch";
+		myProduct1.price = "7415.83";
+		myProduct1.img = "img/switch.jpg";
+		myProduct1.desc = ".50";
+
+		var myProduct2 = new ShoppingCarProduct();
+		myProduct2.id = "002";
+		myProduct2.name = "Motorola";
+		myProduct2.price = "3599.00";
+		myProduct2.img = "img/motorola.jpg";
+		myProduct2.desc = ".30";
+
+		var myProduct3 = new ShoppingCarProduct();
+		myProduct3.id = "003";
+		myProduct3.name = "Televisión";
+		myProduct3.price = "12499.00";
+		myProduct3.img = "img/television.html";
+		myProduct3.desc = ".10";
+
+		listProducts.push(myProduct0);
+		listProducts.push(myProduct1);
+		listProducts.push(myProduct2);
+		listProducts.push(myProduct3);
+
+
+		try
+		{ 
+			tweets = JSON.stringify(listProducts);
+
+
+			tweets = JSON.parse(tweets);
+			myDataProductos = tweets; 
+
+			tweets.forEach(function (tweet) 
+			{
+				$('#id_productos').append($("<option></option>").attr("value", 
+					tweet.id).text(tweet.name));
+
+			});
+
+
+
+		}
+		catch(e)
+		{
+			alert("error : " +  e);
+		}
+	}
+
+
+// <!-- Shopping Car -->
+
+var currentUserShoppingCart;
+var i;
+
+
+Storage.prototype.setObject = function (key, value) {
+	this.setItem(key, JSON.stringify(value));
+}
+
+Storage.prototype.getObject = function (key) {
+	return this.getItem(key) && JSON.parse(this.getItem(key));
+}
+
+
+function HeaderShoppingCar()
+{
+	this.idMov = 0;
+	this.idUser = 0;
+	this.idCliente = 0;
+	this.nombreCliente = '';
+	this.tipoMov = 0;
+
+	this.strSerie = '';
+	this.strFolio = '';
+
+	this.strConcepto = '';
+	this.strFormaPago ='';
+	this.decSubTotal =0;
+
+	this.decDescuento =0;
+	this.decIva =0;
+	this.decTotal = 0;
+
+}
+
+function ShoppingCarItem()
+{
+	this.Par = i;
+	this.ProductID = 0;
+
+	this.ProductName = '';
+	this.Precio = 0;
+	this.Cantidad = 0;
+
+	this.Importe = 0;
+	this.ProductImg = '';
+
+	this.PorcDesc0 = 0;
+	this.PorcDesc1 = 0;
+	this.PorcDesc2 = 0;
+	this.PorcDesc3 = 0;
+	this.Desc0 = 0;
+	this.Desc1 = 0;
+	this.Desc2 = 0;
+	this.Desc3 = 0;
+	this.ImporteNeto = 0;
+
+}
+
+
+function ShoppingCarProduct()
+{
+	this.id = 0;
+	this.name = '';
+	this.price = 0;
+	this.url = '';
+	this.desc = 50;
+}
+
+
+function initialize()
+{
+	currentUserShoppingCart = new Array();
+	i = 0;
+	getProducts();
+}
+
+
+function addCar()
+{
+
+	try
+	{
+
+		var cantidad = document.getElementById("Cantidad").value;
+
+		if (cantidad == "") throw "Introduzca una cantidad";
+		if (isNaN(cantidad)) throw "Introducir solo numeros";
+		if (cantidad < 1) throw "Cantidad debe de ser mayor a 0";
+
+		var item = new ShoppingCarItem();
+		item.Par = i+1;
+		item.ProductID = $("#id_productos").val();
+
+		item.ProductName = $("#id_productos :selected").text().toUpperCase(); 
+
+		item.Precio = parseFloat(document.getElementById("Precio").value);
+		item.Cantidad = cantidad;
+		item.Descuento = parseFloat(document.getElementById("Descuento").value);
+		var importe = 0;
+
+		importe = item.Precio * (1-item.Descuento) * item.Cantidad;
+
+		item.Importe = Math.round(importe * 100) / 100;
+
+       //alert(i);
+
+       var exist = 0;
+       for (var c = currentUserShoppingCart.length; c--;) {
+       	var it = currentUserShoppingCart[c];
+
+
+       	if (it.ProductID == item.ProductID) {
+       		var Cantidad = 0;
+       		Cantidad = parseFloat(currentUserShoppingCart[c].Cantidad);
+       		Cantidad += parseFloat(item.Cantidad);
+       		currentUserShoppingCart[c].Cantidad = Cantidad;
+
+       		var descuento = currentUserShoppingCart[c].Descuento;
+
+       		var importe = 0;
+
+       		importe = item.Precio * (1-item.Descuento) * Cantidad;
+
+
+       		currentUserShoppingCart[c].Importe = Math.round(importe * 100) / 100;
+       		currentUserShoppingCart[c].ProductImg = it.ProductImg;
+
+       		exist = 1;
+       	}
+
+
+       }
+
+       if (exist == 0)
+       {
+       	currentUserShoppingCart[i] = item;
+       	i++;
+       }
+
+       sessionStorage.setObject('UserShoppingCart', currentUserShoppingCart);
+       //alert("show");
+       showScar();
+       document.getElementById("Precio").innerHTML = '0';
+       document.getElementById('id_productos').focus();
+   }
+   catch (err) {
+   	var msgError = "Ocurrio un error en la página.\n\n";
+   	msgError += "Descripción: " + err + "\n\n";
+   	msgError += "Click OK para continuar.\n\n";
+
+   	document.getElementById('Cantidad').value = '';
+   	document.getElementById('Cantidad').focus();
+   	alert(msgError);
+
+   }
+}
+
+
+
+function showScar()
+{
+	var tableCirs = document.getElementById('tableProducts');
+
+	for (var c = tableCirs.rows.length - 1; c > 0; c--)
+	{
+		tableCirs.deleteRow(c);
+	}
+
+	var userShoppingCart = sessionStorage.getObject('UserShoppingCart');
+
+	if (!userShoppingCart) {
+		$('car').innerHTML = '<br />UserShoppingCart does NOT exist in sessionStorage.';
+		return;
+	}
+
+
+	var totalUni = 0;
+	var totImporte = 0;
+
+	userShoppingCart.forEach(function (tweet) {
+
+		tweet.ProductImg = imgs[tweet.ProductID-1];
+
+       //alert("" + tweet.cir);
+
+       var rowCir = tableCirs.insertRow(-1);
+
+       var rowCount = tableCirs.rows.length - 1;
+
+       var cellCantidad = rowCir.insertCell(0);
+       var cellProducto = rowCir.insertCell(1);
+       var cellPrecio = rowCir.insertCell(2);
+       var cellDescuento = rowCir.insertCell(3);
+       var cellImporte = rowCir.insertCell(4);
+       var cellImg = rowCir.insertCell(5);
+       var cellBorrar = rowCir.insertCell(6);
+       var cellEliminar = rowCir.insertCell(7);
+       var cellAgregar = rowCir.insertCell(7);
+
+
+       var url = "<a href=\"javascript: void();\" onclick=\"deleteItem(" + tweet.ProductID + ")\">Borrar</a>";
+       var urlimg = "<img src=\"" + tweet.ProductImg + "\" width=\"43\" />"
+       var urlmas = "<a href=\"javascript: void();\" onclick=\"masItemCar(" + tweet.ProductID + ")\">+</a>";
+       var urlmenos = "<a href=\"javascript: void();\" onclick=\"menosItemCar(" + tweet.ProductID + ")\">-</a>";
+
+       cellCantidad.innerHTML = tweet.Cantidad;
+       cellProducto.innerHTML = tweet.ProductName;
+       cellPrecio.innerHTML = tweet.Precio;
+       cellDescuento.innerHTML = tweet.Descuento * 100 + "%";
+       cellImg.innerHTML = urlimg;
+
+       
+       cellImporte.innerHTML = tweet.Importe;
+       cellBorrar.innerHTML = url;
+       cellAgregar.innerHTML = urlmas;
+       cellEliminar.innerHTML = urlmenos;
+
+       totalUni += parseFloat(tweet.Cantidad);
+       
+       totImporte += tweet.Importe;
+       
+   });
+
+	document.getElementById('totalUnidades').innerHTML = '<b>' + parseFloat(totalUni) + '</b>';
+
+	document.getElementById('totalImporte').innerHTML = '<b>' + totImporte + '</b>';
+
+}
+
+
+function deleteItem(item)
+{
+	alert(item);
+	for (var c = currentUserShoppingCart.length; c--;)
+	{
+		var it = currentUserShoppingCart[c];
+
+
+		if (it.ProductID == item)
+		{
+			currentUserShoppingCart.splice(c, 1);
+			i--;
+		}
+
+
+	}
+	sessionStorage.setObject('UserShoppingCart', currentUserShoppingCart);
+	showScar();
+
+}
+
+function menosItemCar(item)
+{
+	try
+	{
+       /*var importe = 0;
+       importe = (item.Precio*(1-item.Descuento)) * item.Cantidad;
+       item.Importe = Math.round(importe * 100) / 100;*/
+       //alert(i);
+       //var exist = 0;
+       for (var c = currentUserShoppingCart.length; c--;) {
+       	var it = currentUserShoppingCart[c];
+       	if (it.ProductID == item) {
+       		var Cantidad =parseFloat(currentUserShoppingCart[c].Cantidad) -1;
+               //Cantidad -= 1;
+               currentUserShoppingCart[c].Cantidad = Cantidad;
+               var descuento = currentUserShoppingCart[c].Descuento;
+               var importe = 0;
+
+               importe = (it.Precio*(1-it.Descuento)) * Cantidad;
+
+               currentUserShoppingCart[c].Importe = Math.round(importe * 100) / 100;
+
+               //exist = 1;
+           }
+       }
+       sessionStorage.setObject('UserShoppingCart', currentUserShoppingCart);
+       //alert("show");
+       showScar();
+   }
+   catch (err) {
+   	var msgError = "Ocurrio un error en la página.\n\n";
+   	msgError += "Descripción: " + err + "\n\n";
+   	msgError += "Click OK para continuar.\n\n";
+   	document.getElementById('Cantidad').value = '';
+   	document.getElementById('Cantidad').focus();
+   	alert(msgError);
+   }
+}
+//------------------------------------------------------------------------------------------
+function masItemCar(item)
+{
+	try
+	{
+		for (var c = currentUserShoppingCart.length; c--;) {
+			var it = currentUserShoppingCart[c];
+			if (it.ProductID == item) {
+				var Cantidad =parseFloat(currentUserShoppingCart[c].Cantidad) +1;
+				currentUserShoppingCart[c].Cantidad = Cantidad;
+				var descuento = currentUserShoppingCart[c].Descuento;
+				var importe = 0;
+
+				importe = (it.Precio*(1-it.Descuento)) * Cantidad;
+
+				currentUserShoppingCart[c].Importe = Math.round(importe * 100) / 100;
+			}
+		}
+		sessionStorage.setObject('UserShoppingCart', currentUserShoppingCart);
+		showScar();
+	}
+	catch (err) {
+		var msgError = "Ocurrio un error en la página.\n\n";
+		msgError += "Descripción: " + err + "\n\n";
+		msgError += "Click OK para continuar.\n\n";
+		document.getElementById('Cantidad').value = '';
+		document.getElementById('Cantidad').focus();
+		alert(msgError);
+	}
+}
+
+
+
+function clearSessionStorage()
+{
+	sessionStorage.clear();
+}
+
+</script>

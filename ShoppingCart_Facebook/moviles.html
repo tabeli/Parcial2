@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Lab de Web - Facebook - Shopping Cart</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link href="css/shop-item.css" rel="stylesheet">
+
+	<link rel="stylesheet" type="css/style.css">
+	
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+</head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: rgb(216, 58, 79);">
+		<div class="container" style="font-family: sans-serif; font-size: 20px">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active">
+						<a class="navbar-brand" href="index.html">
+							<img src="img/home.png" width="30" height="30" alt="Home">
+						</a>
+					</li>
+					<li class="nav-item" id="fb">
+						<a class="navbar-brand" href="#">
+							<img src="img/fb.png" width="30" height="30" onclick="logIn()" alt="Facebook Login">
+						</a>
+					</li>
+					<li class="nav-item" id="carrito">
+						<a class="navbar-brand" href="carrito.html">
+							<img src="img/cart.png" width="30" height="30" alt="Shopping Cart">
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Page Content -->
+	<div class="container" style="font-family: 'Roboto', sans-serif; font-size: 20px">
+
+		<div class="row">
+
+			<div class="col-lg-3">
+				<h2 class="my-4">Productos</h2>
+				<div class="list-group">
+					<a href="index.html" class="list-group-item list-group-item-info">Consola</a>
+					<a href="moviles.html" class="list-group-item list-group-item-info active">Móvil</a>
+					<a href="television.html" class="list-group-item list-group-item-info">Televisión</a>
+				</div>
+			</div>
+			<!-- /.col-lg-3 -->
+
+			<div class="col-lg-9">
+
+				<div class="card mt-4">
+					<img class="card-img-top img-fluid" src="img/motorola.jpg" width="900" height="400">
+					<div class="card-body">
+						<h3 class="card-title">Smartphone Motorola Moto X4 32 GB 4G Desbloqueado</h3>
+						<h4>$3,599.00</h4>
+						<p class="card-text">
+							<ul>
+								<li>
+									Doble cámara																		
+								</li>
+								<li>
+									Almacenamiento interno de 32GB
+								</li>
+								<li>	
+									Qualcomm Snapdragon
+								</li>
+							</ul>
+							El nuevo Motorola modelo X4 sorprende por su increíble y atractivo diseño en color Negro, es resistente gracias a su marco de aluminio anodizado acompañado de vidrio 3D. Además tiene una protección IP68 contra el agua, como derrames, salpicaduras y lluvia leve.
+						</p>
+						<span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+						4.0 stars
+						<div class="text-center">
+							<a href="carrito.html" class="btn btn-outline-secondary" role="button">Comprar</a>
+						</div>
+					</div>
+				</div>
+				<!-- /.card -->
+
+				<div class="card card-outline-secondary my-4">
+					<div class="card-header">
+						Product Reviews
+					</div>
+					<div class="card-body">
+						<p>Y en cuanto al rendimiento de este móvil Motorola… Cuenta con un rápido procesador Qualcomm Snapdragon, sistema operativo Android 7.1.1, 3 GB de memoria RAM, un almacenamiento interno de 32 GB, y la posibilidad de agregar una memoria microSD expandible hasta 2 TB, para guardar más música, fotos y películas.</p>
+						<small class="text-muted">Posted by Anonymous on 7/10/18</small>
+						<hr>
+						<p>Cada una de las cámaras de este celular moderno cuenta con hardware y software de última generación, para que tomes fotos increíbles de tus vacaciones, reuniones o Selfies.</p>
+						<small class="text-muted">Posted by Anonymous on 15/09/18</small>
+						<hr>				
+					</div>
+				</div>
+				<!-- /.card -->
+
+			</div>
+			<!-- /.col-lg-9 -->
+
+		</div>
+
+	</div>
+	<!-- /.container -->
+
+	<!-- Bootstrap core JavaScript -->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!--SDK FB-->
+	<script>
+		function logIn(){
+			FB.login(function (response){
+				console.log(response);
+			})
+		}
+
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '154898708798471',
+      cookie     : true,  // enable cookies to allow the server to access 
+                          // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.8' // use graph api version 2.8
+  });
+
+    // Now that we've initialized the JavaScript SDK, we call 
+    // FB.getLoginStatus().  This function gets the state of the
+    // person visiting this page and can return one of three states to
+    // the callback you provide.  They can be:
+    //
+    // 1. Logged into your app ('connected')
+    // 2. Logged into Facebook, but not your app ('not_authorized')
+    // 3. Not logged into Facebook and can't tell if they are logged into
+    //    your app or not.
+    //
+    // These three cases are handled in the callback function.
+
+    FB.getLoginStatus(function(response) {
+    	statusChangeCallback(response);
+    });
+
+};
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+  	var js, fjs = d.getElementsByTagName(s)[0];
+  	if (d.getElementById(id)) return;
+  	js = d.createElement(s); js.id = id;
+  	js.src = "https://connect.facebook.net/en_US/sdk.js";
+  	fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+  	console.log('Welcome!  Fetching your information.... ');
+  	FB.api('/me', function(response) {
+  		console.log('Successful login for: ' + response.name);
+  		document.getElementById('status').innerHTML =
+  		'Thanks for logging in, ' + response.name + '!';
+  	});
+  }
+</script>
+
+</body>
+
+</html>
